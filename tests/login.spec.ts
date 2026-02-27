@@ -1,22 +1,16 @@
 import { test, expect } from '@playwright/test';
+import path from 'path';
 
-test('Invalid login should show error message', async ({ page }) => {
-  // Navigate to SauceDemo
-  await page.goto('https://www.saucedemo.com/');
+test('Invalid login should show error', async ({ page }) => {
+  const filePath = `file://${path.resolve('demo-app/login.html')}`;
 
-  // Verify title
-  await expect(page).toHaveTitle(/Swag Labs/);
+  await page.goto(filePath);
 
-  // Enter invalid username
-  await page.locator('#user-name').fill('invalid_user');
+  await expect(page).toHaveTitle(/Demo Login/);
 
-  // Enter invalid password
-  await page.locator('#password').fill('wrong_password');
+  await page.fill('#username', 'wrong');
+  await page.fill('#password', 'wrong');
+  await page.click('#login');
 
-  // Click login
-  await page.locator('#login-button').click();
-
-  // Verify error message is visible
-  const errorMessage = page.locator('[data-test="error"]');
-  await expect(errorMessage).toBeVisible();
+  await expect(page.locator('#error')).toBeVisible();
 });
