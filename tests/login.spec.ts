@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import path from 'path';
 import { LoginPage } from '../pages/LoginPage';
 
-test('Invalid login should show error', async ({ page }) => {
+test('Invalid login should show error', { tag: '@smoke',   }, async ({ page }) => {
 
   const loginPage = new LoginPage(page);
 
