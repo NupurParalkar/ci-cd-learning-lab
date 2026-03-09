@@ -1,16 +1,19 @@
 import { test, expect } from '@playwright/test';
 import path from 'path';
+import { LoginPage } from '../pages/LoginPage';
 
 test('Invalid login should show error', async ({ page }) => {
+
+  const loginPage = new LoginPage(page);
+
   const filePath = `file://${path.resolve('demo-app/login.html')}`;
 
-  await page.goto(filePath);
+  await loginPage.navigate(filePath);
 
-  await expect(page).toHaveTitle(/Demo Login/);
+  await loginPage.enterUsername('wrong');
+  await loginPage.enterPassword('wrong');
+  await loginPage.clickLogin();
 
-  await page.fill('#username', 'wrong');
-  await page.fill('#password', 'wrong');
-  await page.click('#login');
+  await expect(await loginPage.getErrorMessage()).toBeVisible();
 
-  await expect(page.locator('#error')).toBeVisible();
 });
